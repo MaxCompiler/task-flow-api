@@ -1,59 +1,130 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+TASKFLOW API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto consiste en una API REST desarrollada con Laravel y MySQL para administrar proyectos y sus tareas. Permite registrar usuarios, iniciar sesión y realizar las operaciones necesarias para crear, consultar, editar y eliminar proyectos y tareas.
 
-## About Laravel
+TECNOLOGIAS
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel
+- PHP 8+
+- MySQL
+- Laravel Sanctum para la autenticación
+- Thunder Client y Postman para probar los endpoints
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+FUNCIONALIDADES
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Registro e inicio de sesión de usuarios.
+- Generación y eliminación de tokens de acceso.
+- Crear, consultar, actualizar y eliminar proyectos.
+- Agregar tareas a los proyectos.
+- Modificar y eliminar tareas.
+- Cada usuario puede gestionar sus propios proyectos.
+- Al eliminar un proyecto, también se eliminan sus tareas relacionadas (cascada).
+- Las respuestas de la API se manejan en formato JSON.
 
-## Learning Laravel
+REPOSITORIO
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+https://github.com/MaxCompiler/task-flow-api.git
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+INSTALACION
 
-## Laravel Sponsors
+1. Clonar el repositorio:
+git clone https://github.com/MaxCompiler/task-flow-api.git
+cd task-flow-api
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Instalar las dependencias:
+composer install
 
-### Premium Partners
+3. Crear el archivo de configuración:
+cp .env.example .env
+Luego, configurar los datos de conexión a MySQL en el archivo .env.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. Generar la clave de Laravel:
+php artisan key:generate
 
-## Contributing
+5. Ejecutar las migraciones:
+php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. Iniciar el servidor:
+php artisan serve
 
-## Code of Conduct
+ENDPOINTS
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Para las peticiones se recomienda incluir la cabecera:
+Accept: application/json
 
-## Security Vulnerabilities
+AUTENTICACION
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+POST /api/register
+Permite registrar un usuario.
+Body:
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
 
-## License
+POST /api/login
+Permite iniciar sesión y obtener el token de acceso.
+Body:
+{
+  "email": "string",
+  "password": "string"
+}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+RUTAS PROTEGIDAS
+
+Para utilizar las rutas protegidas, se debe enviar el token obtenido al iniciar sesión en los Headers:
+Authorization: Bearer TU_TOKEN
+
+PROYECTOS
+
+GET /api/projects
+Obtiene la lista de proyectos del usuario.
+
+POST /api/projects
+Registra un nuevo proyecto.
+Body:
+{
+  "title": "string",
+  "description": "string"
+}
+
+GET /api/projects/{id}
+Muestra la información de un proyecto.
+
+PUT/PATCH /api/projects/{id}
+Permite modificar los datos de un proyecto.
+Body:
+{
+  "title": "string",
+  "description": "string"
+}
+
+DELETE /api/projects/{id}
+Elimina un proyecto junto con las tareas que tiene asociadas.
+
+TAREAS
+
+POST /api/projects/{project}/task
+Crea una tarea dentro de un proyecto.
+Body:
+{
+  "title": "string",
+  "status": "string"
+}
+
+PUT/PATCH /api/tasks/{task}
+Permite actualizar el título o el estado de una tarea.
+Body:
+{
+  "title": "string",
+  "status": "string"
+}
+
+DELETE /api/tasks/{task}
+Elimina una tarea específica.
+
+SESION
+
+POST /api/logout
+Cierra la sesión eliminando el token de acceso actual.
